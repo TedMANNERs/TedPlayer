@@ -4,6 +4,7 @@ using System.Windows.Input;
 namespace Mp3Player
 {
     public delegate bool CommandCanExecute();
+
     public delegate void Command(object parameter);
 
     /// <summary>
@@ -11,13 +12,13 @@ namespace Mp3Player
     /// </summary>
     public class DelegateCommand : ICommand
     {
-        private readonly Command command;
-        private readonly CommandCanExecute canExecute;
+        private readonly CommandCanExecute _canExecute;
+        private readonly Command _command;
 
         public DelegateCommand(Command command, CommandCanExecute canExecute)
         {
-            this.command = command;
-            this.canExecute = canExecute;
+            _command = command;
+            _canExecute = canExecute;
         }
 
         public event EventHandler CanExecuteChanged
@@ -28,12 +29,12 @@ namespace Mp3Player
 
         public bool CanExecute(object parameter)
         {
-            return canExecute();
+            return _canExecute();
         }
 
         public void Execute(object parameter)
         {
-            command(parameter);
+            _command(parameter);
         }
     }
 }

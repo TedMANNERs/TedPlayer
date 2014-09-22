@@ -20,18 +20,19 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="2" HorizontalAlignment="Right" Content="{Binding ElementName=MediaPlayer, Path=NaturalDuration.TimeSpan.TotalSeconds}"/>
-        <MediaElement Name="MediaPlayer" LoadedBehavior="Manual" Source="{Binding Path=CurrentTrack}" Volume="{Binding Path=Volume}" MediaOpened="MediaPlayer_MediaOpened"/>
-        <ListBox Grid.Column="1" ItemsSource="{Binding Path=TrackList}" Margin="0,0,0,5" SelectedItem="{Binding Path=CurrentTrack}">
+        <Label Grid.Row="2" HorizontalAlignment="Right" Content="{Binding Path=MediaPosition}"/>
+        <MediaElement Grid.Row="0" Grid.Column="0" Name="MediaPlayer" LoadedBehavior="Manual" Source="{Binding Path=CurrentTrack}" 
+                      Volume="{Binding Path=Volume}" MediaOpened="MediaPlayer_MediaOpened"/>
+        <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Path=TrackList}" Margin="0,0,0,5" SelectedItem="{Binding Path=CurrentTrack}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding Path=LocalPath, Converter={StaticResource PathConverter}}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Slider Name="TrackSlider" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,0,10,0" Value="{Binding Path=TimeSliderValue}"
-                Maximum="{Binding ElementName=MediaPlayer, Path=NaturalDuration.TimeSpan.TotalSeconds}" ValueChanged="TrackSlider_ValueChanged"/>
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <Slider Name="TrackSlider" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Margin="10,0,10,0" IsMoveToPointEnabled="True"
+                Value="{Binding Path=MediaPosition}" Maximum="{Binding Path=MediaLength}" Thumb.DragCompleted="TrackSlider_OnDragCompleted" />
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
             <Button Margin="5,5,5,5" Content="&#x2759;&#x25C0;" Padding="5,5" Command="{Binding Path=PreviousCommand}" 
                     FontFamily="Segoe UI Symbol" MinWidth="25"/>
             <Button Margin="5,5,5,5" Padding="5,5" Command="{Binding Path=PlayPauseCommand}" 
@@ -66,20 +67,20 @@
                             <DataTrigger Binding="{Binding Path=Volume}" Value="0" >
                                 <Setter Property="Content" Value="&#x1f508;"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Volume}" Value="2.5">
+                            <DataTrigger Binding="{Binding Path=Volume}" Value="0.25">
                                 <Setter Property="Content" Value="&#128264;"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Volume}" Value="5">
+                            <DataTrigger Binding="{Binding Path=Volume}" Value="0.5">
                                 <Setter Property="Content" Value="&#128265;"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Volume}" Value="7.5">
+                            <DataTrigger Binding="{Binding Path=Volume}" Value="0.75">
                                 <Setter Property="Content" Value="&#128266;"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Label.Style>
             </Label>
-            <Slider Width="100" Value="{Binding Path=Volume}" Maximum="1" SmallChange="0.01"/>
+            <Slider Width="100" Value="{Binding Path=Volume}" Maximum="1" SmallChange="0.05"/>
         </StackPanel>
 
     </Grid>

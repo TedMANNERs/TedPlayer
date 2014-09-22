@@ -1,28 +1,23 @@
-﻿using Microsoft.Win32;
-using Mp3Player.Annotations;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
+using Microsoft.Win32;
+using Mp3Player.Annotations;
 
 namespace Mp3Player
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<Uri> trackList = new ObservableCollection<Uri>();
-        private Uri currentTrack;
-        private bool isPlaying;
-        private float volume = 1f;
-        private int timeSlidervalue;
-        private Timer sliderTimer = new Timer();
+        private Uri _currentTrack;
+        private bool _isPlaying;
+        private int _mediaLength;
+        private int _mediaPosition;
+        private ObservableCollection<Uri> _trackList = new ObservableCollection<Uri>();
+        private float _volume = 1f;
 
         public MainViewModel()
         {
@@ -31,8 +26,9 @@ namespace Mp3Player
             OpenCommand = new DelegateCommand(obj => Open(), () => true);
             PreviousCommand = new DelegateCommand(obj => Previous(), () => TrackList.Any());
             NextCommand = new DelegateCommand(obj => Next(), () => TrackList.Any());
-            sliderTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            sliderTimer.Interval = 1000;
+            SliderTimer = new DispatcherTimer();
+            SliderTimer.Tick += OnTimedEvent;
+            SliderTimer.Interval = TimeSpan.FromMilliseconds(1000);
         }
 
         public ICommand PlayPauseCommand { get; private set; }
@@ -40,69 +36,82 @@ namespace Mp3Player
         public ICommand OpenCommand { get; private set; }
         public ICommand PreviousCommand { get; private set; }
         public ICommand NextCommand { get; private set; }
+        public DispatcherTimer SliderTimer { get; set; }
 
         public ObservableCollection<Uri> TrackList
         {
-            get { return trackList; }
-            set 
-            { 
-                trackList = value; 
+            get { return _trackList; }
+            set
+            {
+                _trackList = value;
                 OnPropertyChanged();
             }
         }
 
         public Uri CurrentTrack
         {
-            get { return currentTrack; }
-            set 
-            { 
-                currentTrack = value;
+            get { return _currentTrack; }
+            set
+            {
+                _currentTrack = value;
                 OnPropertyChanged();
             }
         }
 
         public bool IsPlaying
         {
-            get { return isPlaying; }
+            get { return _isPlaying; }
             set
-            { 
-                isPlaying = value; 
+            {
+                _isPlaying = value;
                 OnPropertyChanged();
             }
         }
 
         public float Volume
         {
-            get { return volume; }
-            set 
-            { 
-                volume = value;
+            get { return _volume; }
+            set
+            {
+                _volume = value;
                 OnPropertyChanged();
             }
         }
 
-        public int TimeSliderValue
+        public int MediaPosition
         {
-            get { return timeSlidervalue; }
-            set 
-            { 
-                timeSlidervalue = value;
+            get { return _mediaPosition; }
+            set
+            {
+                _mediaPosition = value;
                 OnPropertyChanged();
             }
         }
-        
+
+        public int MediaLength
+        {
+            get { return _mediaLength; }
+            set
+            {
+                _mediaLength = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void PlayPause()
         {
             if (IsPlaying)
             {
                 PauseRequested(this, EventArgs.Empty);
-                sliderTimer.Enabled = false;
+                SliderTimer.IsEnabled = false;
                 IsPlaying = false;
             }
             else
             {
                 PlayRequested(this, EventArgs.Empty);
-                sliderTimer.Start();
+                SliderTimer.Start();
                 IsPlaying = true;
             }
         }
@@ -110,25 +119,22 @@ namespace Mp3Player
         private void Stop()
         {
             StopRequested(this, EventArgs.Empty);
-            sliderTimer.Stop();
+            SliderTimer.Stop();
             IsPlaying = false;
+            MediaPosition = 0;
         }
 
         private void Open()
         {
-            OpenFileDialog fdialog = new OpenFileDialog();
-            fdialog.DefaultExt = ".mp3";
-            fdialog.Filter = "Audio Files (*.mp3,*.wav,*.wmv )|*.mp3;*.wav;*.wmv";
-            fdialog.Multiselect = true;
+            OpenFileDialog fdialog = new OpenFileDialog { DefaultExt = ".mp3", Filter = "Audio Files (*.mp3,*.wav,*.wmv )|*.mp3;*.wav;*.wmv", Multiselect = true };
             bool? result = fdialog.ShowDialog();
-            if (result == true)
+            if (!result.HasValue || !(bool)result)
+                return;
+            foreach (string fileName in fdialog.FileNames)
             {
-                foreach (var fileName in fdialog.FileNames)
-                {
-                    TrackList.Add(new Uri(fileName));
-                }
-                CurrentTrack = TrackList.First();
+                TrackList.Add(new Uri(fileName));
             }
+            CurrentTrack = TrackList.First();
         }
 
         private void Previous()
@@ -137,6 +143,7 @@ namespace Mp3Player
                 CurrentTrack = TrackList.ElementAt(TrackList.IndexOf(CurrentTrack) - 1);
             else
                 CurrentTrack = TrackList.Last();
+            MediaPosition = 0;
         }
 
         private void Next()
@@ -145,45 +152,31 @@ namespace Mp3Player
                 CurrentTrack = TrackList.ElementAt(TrackList.IndexOf(CurrentTrack) + 1);
             else
                 CurrentTrack = TrackList.First();
+            MediaPosition = 0;
         }
 
-        private void IncrementTimerValue()
+        public void OnTimedEvent(object sender, EventArgs eventArgs)
         {
-            TimeSliderValue++;
+            if (MediaPosition < MediaLength)
+            {
+                MediaPosition++;
+            }
+            else
+            {
+                SliderTimer.Stop();
+            }
         }
 
         public event EventHandler PlayRequested;
-        private void OnPlayRequested(object sender, EventArgs e)
-        {
-            if (PlayRequested != null)
-                PlayRequested(this, EventArgs.Empty);
-        }
-
         public event EventHandler PauseRequested;
-        private void OnPauseRequested(object sender, EventArgs e)
-        {
-            if (PauseRequested != null)
-                PauseRequested(this, EventArgs.Empty);
-        }
-
         public event EventHandler StopRequested;
-        private void OnStopRequested(object sender, EventArgs e)
-        {
-            if (StopRequested != null)
-                StopRequested(this, EventArgs.Empty);
-        }
 
-        private void OnTimedEvent(object sender, ElapsedEventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke(IncrementTimerValue);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
