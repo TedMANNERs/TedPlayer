@@ -1,4 +1,6 @@
 TedPlayer
 =========
 
-Media player created with WPF.
+Broken Media player created with WPF.
+
+**Shameful display!**
