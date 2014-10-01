@@ -313,6 +313,20 @@
                     <Label Content="{Binding LocalPath, Converter={StaticResource PathConverter}}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.Triggers>
+                <EventTrigger RoutedEvent="ListBox.SelectionChanged">
+                    <BeginStoryboard>
+                        <Storyboard Name="FadeOut" Duration="0:0:1">
+                            <DoubleAnimation Storyboard.TargetName="AlbumArt" Storyboard.TargetProperty="Opacity" From="1" To="0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                    <BeginStoryboard>
+                        <Storyboard Name="FadeIn" Duration="0:0:1">
+                            <DoubleAnimation Storyboard.TargetName="AlbumArt" Storyboard.TargetProperty="Opacity" From="0" To="1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ListBox.Triggers>
         </ListBox>
         <Slider x:Name="TrackSlider" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Margin="10,5,10,0" IsMoveToPointEnabled="True"
 			    Value="{Binding MediaPosition}" Maximum="{Binding MediaLength}" Thumb.DragCompleted="TrackSlider_OnDragCompleted" Style="{DynamicResource PositionSliderStyle}"/>
