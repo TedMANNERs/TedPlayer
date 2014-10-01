@@ -11,6 +11,7 @@
     </Window.DataContext>
     <Window.Resources>
         <namespace:PathToFileNameConverter x:Key="PathConverter"/>
+        <namespace:VolumePercentageConverter x:Key="VolumeConverter"/>
         <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
             <Setter Property="WindowChrome.WindowChrome">
                 <Setter.Value>
@@ -349,36 +350,52 @@
                     </Style>
                 </Button.Style>
             </Button>
-        </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Orientation="Horizontal">
-            <Label FontFamily="Segoe UI Symbol" MinWidth="22">
-                <Label.Style>
-                    <Style TargetType="{x:Type Label}">
-                        <Setter Property="Content" Value="&#128266;"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=Volume}" Value="0" >
-                                <Setter Property="Content" Value="&#x1f508;"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Volume}" Value="0.25">
-                                <Setter Property="Content" Value="&#128264;"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Volume}" Value="0.5">
-                                <Setter Property="Content" Value="&#128265;"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Volume}" Value="0.75">
-                                <Setter Property="Content" Value="&#128266;"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Label.Style>
-            </Label>
-            <Slider Width="100" Value="{Binding Path=Volume}" Maximum="1" SmallChange="0.05"/>
             <Button Margin="5,5,5,5" Content="▶❙" Padding="5,5" Command="{Binding NextCommand}" 
 				    FontFamily="Segoe UI Symbol" MinWidth="25" Style="{StaticResource ButtonStyle}"/>
             <Button Margin="5,5,5,5" Content="■" Padding="5,5" Command="{Binding StopCommand}" 
 				    FontFamily="Segoe UI Symbol" MinWidth="30" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
         <Grid Grid.Column="1" Grid.Row="3">
+            <Label Content="🔊" FontFamily="Segoe UI Symbol" Padding="0" FontSize="14"/>
+            <Label Content="{Binding Volume, Converter={StaticResource VolumeConverter}}" Margin="15,0,0,0" FontSize="8" ContentStringFormat="{}{0}%"/>
+            <ProgressBar Name="VolumeControl" Width="100" VerticalAlignment="Center" Value="{Binding Volume}" Maximum="2" SmallChange="0.05" 
+                         Background="White" Style="{DynamicResource ProgressBarStyle}" MouseLeftButtonDown="VolumeControl_OnMouseLeftButtonDown"
+                         MouseMove="VolumeControl_OnMouseMove" HorizontalAlignment="Left">
+                <ProgressBar.Resources>
+                    <LinearGradientBrush x:Key="ProgressBarBorderBrush" EndPoint="0,1" StartPoint="0,0">
+            			<GradientStop Color="#B2B2B2" Offset="0"/>
+            			<GradientStop Color="#8C8C8C" Offset="1"/>
+            		</LinearGradientBrush>
+                    <Style x:Key="ProgressBarStyle" TargetType="{x:Type ProgressBar}">
+            			<Setter Property="Foreground" Value="#01D328"/>
+            			<Setter Property="BorderBrush" Value="{StaticResource ProgressBarBorderBrush}"/>
+            			<Setter Property="BorderThickness" Value="1"/>
+            			<Setter Property="Template">
+            				<Setter.Value>
+            					<ControlTemplate TargetType="{x:Type ProgressBar}">
+            						<Grid x:Name="TemplateRoot" SnapsToDevicePixels="true">
+            							<Polygon Points="100,0 0,28 100,28" Fill="{TemplateBinding Background}" Opacity="0.1" />
+            							<Polygon Points="100,0 0,28 100,28" x:Name="PART_Track"/>
+            							<Decorator x:Name="PART_Indicator" HorizontalAlignment="Left">
+            								<Grid x:Name="Foreground">
+                                                <Polygon x:Name="Indicator" Points="100,0 0,28 100,28" Fill="{TemplateBinding Foreground}"/>
+            								</Grid>
+            							</Decorator>
+            							<Polygon Points="100,0 0,28 100,28" Stroke="{TemplateBinding BorderBrush}"/>
+            						</Grid>
+            					</ControlTemplate>
+            				</Setter.Value>
+            			</Setter>
+            		</Style>
+            	</ProgressBar.Resources>
+                <ProgressBar.Foreground>
+                    <LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+                        <GradientStop Color="#CC4BCF00" Offset="0"/>
+                        <GradientStop Color="#CCCF0000" Offset="1"/>
+                        <GradientStop Color="#CCFFDC00" Offset="0.6"/>
+                    </LinearGradientBrush>
+                </ProgressBar.Foreground>
+            </ProgressBar>
             <Button Margin="5,5,5,5" HorizontalAlignment="Right" Style="{StaticResource ButtonStyle}"
 			        Content="Open" Padding="5,5" Command="{Binding OpenCommand}" BorderThickness="1" BorderBrush="LightGray" Width="50"/>
         </Grid>

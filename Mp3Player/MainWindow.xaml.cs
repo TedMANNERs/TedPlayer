@@ -71,5 +71,24 @@ namespace Mp3Player
         {
             WindowState = WindowState.Minimized;
         }
+
+        private void VolumeControl_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            VolumeControl.Value = GetVolumeFromMousePosition(e.GetPosition(VolumeControl).X);
+        }
+
+        private void VolumeControl_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                VolumeControl.Value = GetVolumeFromMousePosition(e.GetPosition(VolumeControl).X);
+            }
+        }
+
+        private double GetVolumeFromMousePosition(double posX)
+        {
+            double ratio = posX / VolumeControl.ActualWidth;
+            return ratio * VolumeControl.Maximum;
+        }
     }
 }
