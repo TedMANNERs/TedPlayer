@@ -24,6 +24,7 @@ namespace Mp3Player
         private int _mediaPosition;
         private ObservableCollection<Uri> _trackList = new ObservableCollection<Uri>();
         private float _volume = 1f;
+        private Stretch _imageStretch;
 
         public MainViewModel()
         {
@@ -115,6 +116,17 @@ namespace Mp3Player
                 OnPropertyChanged();
             }
         }
+
+        public Stretch ImageStretch
+        {
+            get { return _imageStretch; }
+            set
+            {
+                _imageStretch = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void ReadAlbumArt()
@@ -125,7 +137,17 @@ namespace Mp3Player
                 tag = mp3.GetTag(Id3TagFamily.FileStartTag);
             PictureFrame image = tag.Pictures.FirstOrDefault();
             BitmapImage bitmapImage;
+            if (image == null)
+            {
+                bitmapImage = GetBitmapImage(new Uri("pack://application:,,,/Images/TakaneNoImage.png", UriKind.Absolute));
+                ImageStretch = Stretch.None;
+            }
+            else
+            {
                 byte[] bytes = image.PictureData;
+
+                try
+                {
                     bitmapImage = new BitmapImage();
                     using (MemoryStream memory = new MemoryStream(bytes))
                     {
@@ -134,6 +156,14 @@ namespace Mp3Player
                         bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                         bitmapImage.EndInit();
                     }
+                    ImageStretch = Stretch.UniformToFill;
+                }
+                catch (Exception e)
+                {
+                    bitmapImage = GetBitmapImage(new Uri("pack://application:,,,/Images/TakaneError.png", UriKind.Absolute));
+                    ImageStretch = Stretch.None;
+                }
+            }
             AlbumArt = bitmapImage;
         }
 
