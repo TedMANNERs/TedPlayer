@@ -290,6 +290,7 @@
         <MediaElement Grid.Row="0" Grid.Column="0" Name="MediaPlayer" LoadedBehavior="Manual" Source="{Binding Path=CurrentTrack}" 
                       Volume="{Binding Path=Volume}" MediaOpened="MediaPlayer_MediaOpened"/>
         <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Path=TrackList}" Margin="0,0,0,5" SelectedItem="{Binding Path=CurrentTrack}">
+        <Rectangle Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" Fill="White" Opacity="0.2" VerticalAlignment="Stretch" Height="30"/>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding LocalPath, Converter={StaticResource PathConverter}}"/>
