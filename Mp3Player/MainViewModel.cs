@@ -143,7 +143,8 @@ namespace Mp3Player
                 CurrentTrack = TrackList.ElementAt(TrackList.IndexOf(CurrentTrack) - 1);
             else
                 CurrentTrack = TrackList.Last();
-            MediaPosition = 0;
+            Stop();
+            PlayPause();
         }
 
         private void Next()
@@ -152,7 +153,8 @@ namespace Mp3Player
                 CurrentTrack = TrackList.ElementAt(TrackList.IndexOf(CurrentTrack) + 1);
             else
                 CurrentTrack = TrackList.First();
-            MediaPosition = 0;
+            Stop();
+            PlayPause();
         }
 
         public void OnTimedEvent(object sender, EventArgs eventArgs)
