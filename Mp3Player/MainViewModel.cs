@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Id3;
+using Id3.Frames;
 using Microsoft.Win32;
 using Mp3Player.Annotations;
 
@@ -12,6 +17,7 @@ namespace Mp3Player
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        private BitmapImage _albumArt;
         private Uri _currentTrack;
         private bool _isPlaying;
         private int _mediaLength;
@@ -98,6 +104,15 @@ namespace Mp3Player
             }
         }
 
+        public BitmapImage AlbumArt
+        {
+            get { return _albumArt; }
+            set
+            {
+                _albumArt = value;
+                OnPropertyChanged();
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void PlayPause()
