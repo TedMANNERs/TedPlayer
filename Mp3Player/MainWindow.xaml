@@ -8,6 +8,16 @@
     </Window.DataContext>
     <Window.Resources>
         <namespace:PathToFileNameConverter x:Key="PathConverter"/>
+        <Style x:Key="ButtonStyle" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="30"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -32,14 +42,14 @@
         </ListBox>
         <Slider Name="TrackSlider" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Margin="10,0,10,0" IsMoveToPointEnabled="True"
                 Value="{Binding Path=MediaPosition}" Maximum="{Binding Path=MediaLength}" Thumb.DragCompleted="TrackSlider_OnDragCompleted" />
-        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
-            <Button Margin="5,5,5,5" Content="&#x2759;&#x25C0;" Padding="5,5" Command="{Binding Path=PreviousCommand}" 
-                    FontFamily="Segoe UI Symbol" MinWidth="25"/>
-            <Button Margin="5,5,5,5" Padding="5,5" Command="{Binding Path=PlayPauseCommand}" 
-                    FontFamily="Segoe UI Symbol" MinWidth="30">
+        <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
+            <Button Margin="5,5,5,5" Content="❙◀" Padding="5,5" Command="{Binding PreviousCommand}" 
+				    FontFamily="Segoe UI Symbol" MinWidth="25" Style="{StaticResource ButtonStyle}"/>
+            <Button Margin="5,5,5,5" Padding="5,5" Command="{Binding PlayPauseCommand}" 
+				    FontFamily="Segoe UI Symbol" MinWidth="30">
                 <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Content" Value="&#x25B6;"/>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}">
+                        <Setter Property="Content" Value="▶"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsPlaying}" Value="true">
                                 <Setter Property="Content" Value="❚❚"/>
@@ -51,13 +61,7 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <Button Margin="5,5,5,5" Content="&#x25B6;&#x2759;" Padding="5,5" Command="{Binding Path=NextCommand}" 
-                    FontFamily="Segoe UI Symbol" MinWidth="25"/>
-            <Button Margin="5,5,5,5" Content="&#x25A0;" Padding="5,5" Command="{Binding Path=StopCommand}" 
-                    FontFamily="Segoe UI Symbol" MinWidth="30"/>
         </StackPanel>
-        <Button Grid.Column="1" Grid.Row="2" Margin="5,5,5,5" HorizontalAlignment="Right" 
-                Content="Open" Padding="5,5" Command="{Binding Path=OpenCommand}"/>
         <StackPanel Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Orientation="Horizontal">
             <Label FontFamily="Segoe UI Symbol" MinWidth="22">
                 <Label.Style>
@@ -81,7 +85,14 @@
                 </Label.Style>
             </Label>
             <Slider Width="100" Value="{Binding Path=Volume}" Maximum="1" SmallChange="0.05"/>
+            <Button Margin="5,5,5,5" Content="▶❙" Padding="5,5" Command="{Binding NextCommand}" 
+				    FontFamily="Segoe UI Symbol" MinWidth="25" Style="{StaticResource ButtonStyle}"/>
+            <Button Margin="5,5,5,5" Content="■" Padding="5,5" Command="{Binding StopCommand}" 
+				    FontFamily="Segoe UI Symbol" MinWidth="30" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
-
+        <Grid Grid.Column="1" Grid.Row="3">
+            <Button Margin="5,5,5,5" HorizontalAlignment="Right" Style="{StaticResource ButtonStyle}"
+			        Content="Open" Padding="5,5" Command="{Binding OpenCommand}" BorderThickness="1" BorderBrush="LightGray" Width="50"/>
+        </Grid>
     </Grid>
 </Window>
