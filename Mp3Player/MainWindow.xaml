@@ -1,13 +1,13 @@
-﻿<Window x:Class="Mp3Player.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mp3Player="clr-namespace:Mp3Player"
         Title="Ted Player" Height="350" Width="525">
+        xmlns:namespace="clr-namespace:Mp3Player"
     <Window.DataContext>
-        <mp3Player:MainViewModel/>
+        <namespace:MainViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <mp3Player:PathToFileNameConverter x:Key="PathConverter"/>
+        <namespace:PathToFileNameConverter x:Key="PathConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -26,7 +26,7 @@
         <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Path=TrackList}" Margin="0,0,0,5" SelectedItem="{Binding Path=CurrentTrack}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Label Content="{Binding Path=LocalPath, Converter={StaticResource PathConverter}}"/>
+                    <Label Content="{Binding LocalPath, Converter={StaticResource PathConverter}}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
@@ -41,11 +41,11 @@
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Content" Value="&#x25B6;"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=IsPlaying}" Value="true">
-                                <Setter Property="Content" Value="&#x275A;&#x275A;"/>
+                            <DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                <Setter Property="Content" Value="❚❚"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=IsPlaying}" Value="false">
-                                <Setter Property="Content" Value="&#x25B6;"/>
+                            <DataTrigger Binding="{Binding IsPlaying}" Value="false">
+                                <Setter Property="Content" Value="▶"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
