@@ -60,6 +60,8 @@ namespace Mp3Player
             set
             {
                 _currentTrack = value;
+                ReadAlbumArt();
+                MediaPosition = 0;
                 OnPropertyChanged();
             }
         }
@@ -114,6 +116,42 @@ namespace Mp3Player
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public void ReadAlbumArt()
+        {
+            Id3Tag tag;
+            using (FileStream stream = new FileStream(CurrentTrack.LocalPath, FileMode.Open, FileAccess.Read))
+            using (Mp3Stream mp3 = new Mp3Stream(stream))
+                tag = mp3.GetTag(Id3TagFamily.FileStartTag);
+            PictureFrame image = tag.Pictures.FirstOrDefault();
+            BitmapImage bitmapImage;
+                byte[] bytes = image.PictureData;
+                    bitmapImage = new BitmapImage();
+                    using (MemoryStream memory = new MemoryStream(bytes))
+                    {
+                        bitmapImage.BeginInit();
+                        bitmapImage.StreamSource = memory;
+                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmapImage.EndInit();
+                    }
+            AlbumArt = bitmapImage;
+        }
+
+        private static BitmapImage GetBitmapImage(Uri imageUri)
+        {
+            PngBitmapDecoder decoder = new PngBitmapDecoder(imageUri, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+            PngBitmapEncoder encoder = new PngBitmapEncoder { Frames = decoder.Frames };
+            BitmapImage bitmapImage = new BitmapImage();
+            using (MemoryStream memory = new MemoryStream())
+            {
+                encoder.Save(memory);
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+            }
+            return bitmapImage;
+        }
 
         private void PlayPause()
         {
