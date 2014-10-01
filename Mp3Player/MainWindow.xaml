@@ -287,12 +287,27 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Row="2" HorizontalAlignment="Right" Content="{Binding Path=MediaPosition}"/>
-        <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Path=TrackList}" Margin="0,0,0,5" SelectedItem="{Binding Path=CurrentTrack}">
         <Image Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Stretch="{Binding ImageStretch}" VerticalAlignment="Center"
 	           Source="{Binding AlbumArt}" Name="AlbumArt"/>
         <Rectangle Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" Fill="White" Opacity="0.2" VerticalAlignment="Stretch" Height="30"/>
         <MediaElement Grid.Row="1" Grid.Column="0" x:Name="MediaPlayer" LoadedBehavior="Manual" Source="{Binding CurrentTrack}" 
 			          Volume="{Binding Volume}" MediaOpened="MediaPlayer_MediaOpened"/>
+        <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TrackList}" SelectedItem="{Binding CurrentTrack}"
+                 BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" MinWidth="100" Background="Transparent">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Style.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </Style.Triggers>
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightGray" Opacity="0.5"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightGray" Opacity="0.5"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightGray" Opacity="0.5"/>
+                    </Style.Resources>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding LocalPath, Converter={StaticResource PathConverter}}"/>
