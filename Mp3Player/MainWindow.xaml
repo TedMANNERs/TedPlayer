@@ -358,7 +358,7 @@
         <Grid Grid.Column="1" Grid.Row="3">
             <Label Content="🔊" FontFamily="Segoe UI Symbol" Padding="0" FontSize="14"/>
             <Label Content="{Binding Volume, Converter={StaticResource VolumeConverter}}" Margin="15,0,0,0" FontSize="8" ContentStringFormat="{}{0}%"/>
-            <ProgressBar Name="VolumeControl" Width="100" VerticalAlignment="Center" Value="{Binding Volume}" Maximum="2" SmallChange="0.05" 
+            <ProgressBar Name="VolumeControl" Width="100" VerticalAlignment="Center" Value="{Binding Volume}" Maximum="1" SmallChange="0.05" 
                          Background="White" Style="{DynamicResource ProgressBarStyle}" MouseLeftButtonDown="VolumeControl_OnMouseLeftButtonDown"
                          MouseMove="VolumeControl_OnMouseMove" HorizontalAlignment="Left">
                 <ProgressBar.Resources>

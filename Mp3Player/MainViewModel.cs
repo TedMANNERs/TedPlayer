@@ -20,10 +20,10 @@ namespace Mp3Player
         private BitmapImage _albumArt;
         private Uri _currentTrack;
         private bool _isPlaying;
-        private int _mediaLength;
+        private int _mediaLength = 1;
         private int _mediaPosition;
         private ObservableCollection<Uri> _trackList = new ObservableCollection<Uri>();
-        private float _volume = 1f;
+        private float _volume = 0.5f;
         private Stretch _imageStretch;
 
         public MainViewModel()
