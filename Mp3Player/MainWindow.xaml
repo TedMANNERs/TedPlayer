@@ -12,6 +12,7 @@
     <Window.Resources>
         <namespace:PathToFileNameConverter x:Key="PathConverter"/>
         <namespace:VolumePercentageConverter x:Key="VolumeConverter"/>
+        <namespace:TimeConverter x:Key="TimeConverter"/>
         <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
             <Setter Property="WindowChrome.WindowChrome">
                 <Setter.Value>
@@ -277,7 +278,7 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="180"/>
+            <ColumnDefinition MinWidth="200"/>
             <ColumnDefinition MinWidth="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -286,8 +287,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
-        <Label Grid.Row="2" HorizontalAlignment="Right" Content="{Binding Path=MediaPosition}"/>
         <Image Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Stretch="{Binding ImageStretch}" VerticalAlignment="Center"
 	           Source="{Binding AlbumArt}" Name="AlbumArt"/>
         <Rectangle Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" Fill="White" Opacity="0.2" VerticalAlignment="Stretch" Height="30"/>
@@ -354,6 +353,8 @@
 				    FontFamily="Segoe UI Symbol" MinWidth="25" Style="{StaticResource ButtonStyle}"/>
             <Button Margin="5,5,5,5" Content="■" Padding="5,5" Command="{Binding StopCommand}" 
 				    FontFamily="Segoe UI Symbol" MinWidth="30" Style="{StaticResource ButtonStyle}"/>
+            <Label HorizontalAlignment="Left" Content="{Binding MediaPosition, Converter={StaticResource TimeConverter}}"
+                   VerticalAlignment="Center"/>
         </StackPanel>
         <Grid Grid.Column="1" Grid.Row="3">
             <Label Content="🔊" FontFamily="Segoe UI Symbol" Padding="0" FontSize="14"/>
