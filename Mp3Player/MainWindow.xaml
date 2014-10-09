@@ -253,21 +253,17 @@
                             <Canvas.RenderTransform>
                                 <TranslateTransform X="5.5" Y="11"/>
                             </Canvas.RenderTransform>
-                            <Path x:Name="Background" Data="{StaticResource SliderThumbOuterBorderGeometry}" Fill="White"/>
+                            <Path x:Name="Background" Data="{StaticResource SliderThumbOuterBorderGeometry}" Fill="#B2FFFFFF"/>
                             <Path x:Name="InnerBorder" Data="{StaticResource SliderThumbMiddleBorderGeometry}" Stroke="White"/>
                             <Path x:Name="OuterBorder" Data="{StaticResource SliderThumbOuterBorderGeometry}" Stroke="#FF929292"/>
                         </Canvas>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Fill" TargetName="Background" Value="LightGray"/>
-                                <Setter Property="Stroke" TargetName="OuterBorder" Value="Gray"/>
-                            </Trigger>
-                            <Trigger Property="Foreground" Value="Gray">
-                                <Setter Property="Fill" TargetName="Background" Value="LightGray"/>
+                                <Setter Property="Fill" TargetName="Background" Value="#B2D3D3D3"/>
                                 <Setter Property="Stroke" TargetName="OuterBorder" Value="Gray"/>
                             </Trigger>
                             <Trigger Property="IsDragging" Value="true">
-                                <Setter Property="Fill" TargetName="Background" Value="LightGray"/>
+                                <Setter Property="Fill" TargetName="Background" Value="#F2D3D3D3"/>
                                 <Setter Property="Stroke" TargetName="OuterBorder" Value="Gray"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
