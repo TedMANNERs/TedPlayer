@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" x:Class="Mp3Player.MainWindow"
         Title="Ted Player" Height="350" Width="525" Background="White" MouseLeftButtonDown="Window_MouseLeftButtonDown" 
-        AllowsTransparency="True" WindowStyle="None" Style="{DynamicResource WindowStyle}">
+        AllowsTransparency="True" WindowStyle="None" Style="{DynamicResource WindowStyle}" MouseLeftButtonUp="Window_MouseLeftButtonUp">
     <Window.DataContext>
         <namespace:MainViewModel/>
     </Window.DataContext>

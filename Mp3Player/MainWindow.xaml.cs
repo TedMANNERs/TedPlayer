@@ -81,9 +81,16 @@ namespace Mp3Player
 
         private void VolumeControl_OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed && VolumeControl.Value <= 1f && VolumeControl.Value >= 0f)
             {
-                VolumeControl.Value = GetVolumeFromMousePosition(e.GetPosition(VolumeControl).X);
+                VolumeControl.CaptureMouse();
+                double volume = GetVolumeFromMousePosition(e.GetPosition(VolumeControl).X);
+                if (volume <= 1d && volume >= 0d)
+                    VolumeControl.Value = volume;
+                else if (volume >= 1d)
+                    VolumeControl.Value = 1f;
+                else if (volume <= 0d)
+                    VolumeControl.Value = 0f;
             }
         }
 
@@ -98,6 +105,14 @@ namespace Mp3Player
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 MediaPlayer.Position = new TimeSpan(0, 0, 0, (int)_track.ValueFromPoint(e.GetPosition(_track)), 0);
+            }
+        }
+
+        private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (VolumeControl.IsMouseCaptured)
+            {
+                VolumeControl.ReleaseMouseCapture();
             }
         }
     }
