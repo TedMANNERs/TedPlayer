@@ -135,15 +135,10 @@ namespace Mp3Player
             using (FileStream stream = new FileStream(CurrentTrack.LocalPath, FileMode.Open, FileAccess.Read))
             using (Mp3Stream mp3 = new Mp3Stream(stream))
                 tag = mp3.GetTag(Id3TagFamily.FileStartTag);
-            PictureFrame image = tag.Pictures.FirstOrDefault();
             BitmapImage bitmapImage;
-            if (image == null)
+            try
             {
-                bitmapImage = GetBitmapImage(new Uri("pack://application:,,,/Images/TakaneNoImage.png", UriKind.Absolute));
-                ImageStretch = Stretch.None;
-            }
-            else
-            {
+                PictureFrame image = tag.Pictures.FirstOrDefault();
                 byte[] bytes = image.PictureData;
 
                 try
@@ -158,11 +153,16 @@ namespace Mp3Player
                     }
                     ImageStretch = Stretch.UniformToFill;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     bitmapImage = GetBitmapImage(new Uri("pack://application:,,,/Images/TakaneError.png", UriKind.Absolute));
                     ImageStretch = Stretch.None;
                 }
+            }
+            catch (NullReferenceException)
+            {
+                bitmapImage = GetBitmapImage(new Uri("pack://application:,,,/Images/TakaneNoImage.png", UriKind.Absolute));
+                ImageStretch = Stretch.None;
             }
             AlbumArt = bitmapImage;
         }
