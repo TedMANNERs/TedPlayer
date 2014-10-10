@@ -11,6 +11,7 @@ namespace Mp3Player
     public partial class MainWindow : Window
     {
         private readonly MainViewModel _mainViewModel;
+        private Track _track;
 
         public MainWindow()
         {
@@ -30,6 +31,7 @@ namespace Mp3Player
                 style = (Style)Resources["WindowStyle"];
             }
             Style = style;
+            _track = (Track)TrackSlider.Template.FindName("PART_Track", TrackSlider);
         }
 
         private void MediaPlayer_MediaOpened(object sender, RoutedEventArgs e)
@@ -89,6 +91,14 @@ namespace Mp3Player
         {
             double ratio = posX / VolumeControl.ActualWidth;
             return ratio * VolumeControl.Maximum;
+        }
+
+        private void TrackSlider_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                MediaPlayer.Position = new TimeSpan(0, 0, 0, (int)_track.ValueFromPoint(e.GetPosition(_track)), 0);
+            }
         }
     }
 }
