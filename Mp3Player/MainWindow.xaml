@@ -275,7 +275,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200"/>
-            <ColumnDefinition MinWidth="200"/>
+            <ColumnDefinition MinWidth="170"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -288,42 +288,44 @@
         <Rectangle Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" Fill="White" Opacity="0.2" VerticalAlignment="Stretch" Height="30"/>
         <MediaElement Grid.Row="1" Grid.Column="0" x:Name="MediaPlayer" LoadedBehavior="Manual" Source="{Binding CurrentTrack}" 
 			          Volume="{Binding Volume}" MediaOpened="MediaPlayer_MediaOpened"/>
-        <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TrackList}" SelectedItem="{Binding CurrentTrack}"
-                 BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" MinWidth="100" Background="Transparent">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Style.Triggers>
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </Trigger>
-                    </Style.Triggers>
-                    <Style.Resources>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightGray" Opacity="0.5"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightGray" Opacity="0.5"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightGray" Opacity="0.5"/>
-                    </Style.Resources>
-                </Style>
-            </ListBox.ItemContainerStyle>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Label Content="{Binding LocalPath, Converter={StaticResource PathConverter}}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.Triggers>
-                <EventTrigger RoutedEvent="ListBox.SelectionChanged">
-                    <BeginStoryboard>
-                        <Storyboard Name="FadeOut" Duration="0:0:1">
-                            <DoubleAnimation Storyboard.TargetName="AlbumArt" Storyboard.TargetProperty="Opacity" From="1" To="0"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                    <BeginStoryboard>
-                        <Storyboard Name="FadeIn" Duration="0:0:1">
-                            <DoubleAnimation Storyboard.TargetName="AlbumArt" Storyboard.TargetProperty="Opacity" From="0" To="1"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </ListBox.Triggers>
-        </ListBox>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding TrackList}" SelectedItem="{Binding CurrentTrack}"
+                     BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Background="Transparent">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Style.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="White" Opacity="0.7"/>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="White" Opacity="0.7"/>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="White" Opacity="0.7"/>
+                        </Style.Resources>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding LocalPath, Converter={StaticResource PathConverter}}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.Triggers>
+                    <EventTrigger RoutedEvent="ListBox.SelectionChanged">
+                        <BeginStoryboard>
+                            <Storyboard Name="FadeOut" Duration="0:0:1">
+                                <DoubleAnimation Storyboard.TargetName="AlbumArt" Storyboard.TargetProperty="Opacity" From="1" To="0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard Name="FadeIn" Duration="0:0:1">
+                                <DoubleAnimation Storyboard.TargetName="AlbumArt" Storyboard.TargetProperty="Opacity" From="0" To="1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </ListBox.Triggers>
+            </ListBox>
+            <GridSplitter Grid.Row="0" Grid.Column="1" Width="20" Background="Transparent" HorizontalAlignment="Left"/>
+        </Grid>
         <Slider x:Name="TrackSlider" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Margin="10,5,10,0" IsMoveToPointEnabled="True"
 			    Value="{Binding MediaPosition}" Maximum="{Binding MediaLength}" Thumb.DragCompleted="TrackSlider_OnDragCompleted" Style="{DynamicResource PositionSliderStyle}" MouseMove="TrackSlider_MouseMove"/>
         <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
