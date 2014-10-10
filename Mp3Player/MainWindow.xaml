@@ -325,7 +325,7 @@
             </ListBox.Triggers>
         </ListBox>
         <Slider x:Name="TrackSlider" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Margin="10,5,10,0" IsMoveToPointEnabled="True"
-			    Value="{Binding MediaPosition}" Maximum="{Binding MediaLength}" Thumb.DragCompleted="TrackSlider_OnDragCompleted" Style="{DynamicResource PositionSliderStyle}"/>
+			    Value="{Binding MediaPosition}" Maximum="{Binding MediaLength}" Thumb.DragCompleted="TrackSlider_OnDragCompleted" Style="{DynamicResource PositionSliderStyle}" MouseMove="TrackSlider_MouseMove"/>
         <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
             <Button Margin="5,5,5,5" Content="❙◀" Padding="5,5" Command="{Binding PreviousCommand}" 
 				    FontFamily="Segoe UI Symbol" MinWidth="25" Style="{StaticResource ButtonStyle}"/>
